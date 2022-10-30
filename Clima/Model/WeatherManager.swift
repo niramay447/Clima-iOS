@@ -10,13 +10,11 @@ struct WeatherManager {
     }
     
     func performRequest(urlString : String){
-        // create a URL
+        
         if let url = URL(string: urlString){
             
-            // create a URL session
             let session = URLSession(configuration: .default)
             
-            // give the session a task
             let task = session.dataTask(with: url) { (data, response, error) in
                 if error != nil{
                     print(error!)
@@ -24,17 +22,28 @@ struct WeatherManager {
                 }
                 
                 if let safeData = data {
-                    let dataString = String(data: safeData, encoding: .utf8)
-                    print(dataString ?? "None")
+                    self.parseJSON(weatherData: safeData)
+                    
                 }
             }
             
-            //start the task
             task.resume()
             
         }
     }
- 
+    
+    func parseJSON(weatherData: Data){
+        let decoder = JSONDecoder()
+        
+        do {
+            let decodedData = try decoder.decode(WeatherData.self, from:weatherData)
+            let id = decodedData.weather[0].id
+        } catch {
+            print(error)
+        }
+    }
+    
+    func getCondition 
 }
 
 
